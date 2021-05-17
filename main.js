@@ -9,12 +9,16 @@ function createWindow() {
         width: 800,
         height: 600,
         webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
             preload: path.join(__dirname, 'preload.js')
         }
     })
 
-    win.loadFile(path.join(__dirname, 'html/index.html'))
+    win.loadFile(path.join(__dirname, 'index.html'))
+    //sendToPython()
     win.removeMenu()
+
 }
 
 app.whenReady().then(() => {
@@ -32,3 +36,11 @@ app.on('window-all-closed', () => {
         app.quit()
     }
 })
+
+function sendToPython() {
+    var python = require('child_process').spawn('python', ['./hello.py']);
+    python.stdout.on('data', function (data) {
+        console.log("data: ", data.toString('utf8'));
+    });
+
+}
